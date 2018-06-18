@@ -110,21 +110,12 @@ class PanAnimated extends React.Component {
   }
 }
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={{ marginTop: 30 }}>
-        <PanAnimated />
-      </View>
-    );
-  }
-}
+const App = () => {
+  return (
+    <View style={{ marginTop: 30 }}>
+      <PanAnimated />
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
+export default App;
