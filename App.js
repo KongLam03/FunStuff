@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import styled from "styled-components";
 const { width, height } = Dimensions.get("window");
+const centerCircle = width / 2 - 25;
 
-const Box = styled(Animated.View)`
+const AnimatedCircle = styled(Animated.View)`
   height: 50;
   width: 50;
   background-color: green;
   position: absolute;
+  border-radius: ${() => 50 / 2};
 `;
 
 class PanAnimated extends React.Component {
@@ -36,7 +38,7 @@ class PanAnimated extends React.Component {
             dy: this.animatedPosition.y
           }
         ])(evt, gestureState);
-        if (evt.nativeEvent.pageX > width / 2 - 25) {
+        if (evt.nativeEvent.pageX > centerCircle) {
           this.refs.setNativeProps({
             backgroundColor: "red"
           });
@@ -74,7 +76,7 @@ class PanAnimated extends React.Component {
 
   animateTimer() {
     Animated.timing(this.lastState.x, {
-      toValue: width / 2 - 25,
+      toValue: centerCircle,
       duration: 1000
     }).start();
     this.refs.setNativeProps({
@@ -84,12 +86,10 @@ class PanAnimated extends React.Component {
 
   render() {
     return (
-      <Box
+      <AnimatedCircle
         ref={ref => (this.refs = ref)}
         {...this._panResponder.panHandlers}
         style={{
-          // left: this.movement.x,
-          // top: this.movement.y
           transform: [
             {
               translateX: Animated.add(
@@ -103,8 +103,7 @@ class PanAnimated extends React.Component {
                 this.lastState.y
               )
             }
-          ],
-          borderRadius: 100 / 2
+          ]
         }}
       />
     );
@@ -114,7 +113,7 @@ class PanAnimated extends React.Component {
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 30 }}>
         <PanAnimated />
       </View>
     );
