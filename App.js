@@ -10,6 +10,7 @@ import {
 import styled from "styled-components";
 const { width, height } = Dimensions.get("window");
 const centerCircle = width / 2 - 25;
+import { Constants } from "expo";
 
 const AnimatedCircle = styled(Animated.View)`
   height: 50;
@@ -28,9 +29,7 @@ class PanAnimated extends React.Component {
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (evt, gestureState) => {
-        this.refs.setNativeProps({
-          backgroundColor: "green"
-        });
+        this.setNativeColorProp("green");
         Animated.event([
           null,
           {
@@ -39,9 +38,7 @@ class PanAnimated extends React.Component {
           }
         ])(evt, gestureState);
         if (evt.nativeEvent.pageX > centerCircle) {
-          this.refs.setNativeProps({
-            backgroundColor: "red"
-          });
+          this.setNativeColorProp("red");
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
@@ -52,7 +49,7 @@ class PanAnimated extends React.Component {
           y:
             this.animatedPosition.y.__getValue() + this.lastState.y.__getValue()
         });
-        this.animateTimer();
+        // this.animateTimer();
         // if (this.lastState.x.__getValue() < width / 6) {
         //   this.lastState.setValue({
         //     x: 0,
@@ -69,6 +66,14 @@ class PanAnimated extends React.Component {
         //     y: this.lastState.y.__getValue()
         //   });
         // }
+        if (
+          this.lastState.x.__getValue() < 5 ||
+          this.lastState.x.__getValue() > width - 50 ||
+          this.lastState.y.__getValue() < 5 ||
+          this.lastState.y.__getValue() > height - 75
+        ) {
+          this.animateTimer();
+        }
         this.animatedPosition.setValue({ x: 0, y: 0 });
       }
     });
@@ -79,8 +84,16 @@ class PanAnimated extends React.Component {
       toValue: centerCircle,
       duration: 1000
     }).start();
+    Animated.timing(this.lastState.y, {
+      toValue: height / 3,
+      duration: 1000
+    }).start();
+    this.setNativeColorProp("green");
+  }
+
+  setNativeColorProp(color) {
     this.refs.setNativeProps({
-      backgroundColor: "green"
+      backgroundColor: color
     });
   }
 
@@ -112,7 +125,7 @@ class PanAnimated extends React.Component {
 
 const App = () => {
   return (
-    <View style={{ marginTop: 30 }}>
+    <View style={{ marginTop: Constants.statusBarHeight }}>
       <PanAnimated />
     </View>
   );
